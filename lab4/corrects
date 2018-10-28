@@ -1,0 +1,24 @@
+# convert negative petal to NA
+if ( is.finite(Petal.Length) ) { 
+	if ( Petal.Length < 0 ) {
+		Petal.Length = NA 
+	}
+}
+
+if ( is.finite(Petal.Width) ) { 
+	if ( Petal.Width < 0 ) {
+		Petal.Width = NA 
+	}
+}
+
+if ( is.finite(Sepal.Length) ) { 
+	if ( Sepal.Length < 0 ) {
+		Sepal.Length = NA 
+	}
+}
+
+if ( is.finite(Sepal.Width) ) { 
+	if ( Sepal.Width < 0 ) {
+		Sepal.Width = NA 
+	}
+}
