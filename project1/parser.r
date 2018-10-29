@@ -15,7 +15,7 @@ CnfParse = function(path)
   cnf = list()
   for (i in CLAUSE_LINE:length(fileLines))
   {
-    clause = as.integer(strsplit(fileLines[i], " ")[[1]])
+    clause = as.integer(strsplit(fileLines[i], "  ")[[1]])
     cnf[[i + 1 - CLAUSE_LINE]] = head(clause, -1)
   }
   
