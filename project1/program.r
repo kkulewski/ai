@@ -27,3 +27,24 @@ CnfFitness(cnf3, chr3)
 chr4 = rep(1, 100)
 cnf4 = CnfParse("./cnf/CBS_k3_n100_m403_b10_0.cnf")
 CnfFitness(cnf4, chr4)
+
+
+# GA 
+install.packages("genalg")
+library(genalg)
+
+CnfFitnessGa = function(chromosome)
+{
+  return (CnfFitness(cnf4, chromosome))
+}
+
+gaResult = rbga.bin(size = 100, 
+                    popSize = 25, 
+                    iters = 50, 
+                    mutationChance = 0.05, 
+                    elitism = T, 
+                    evalFunc = CnfFitnessGa)
+
+bestChromosome = gaResult$population[which.min(gaResult$evaluations),]
+
+CnfFitness(cnf4, bestChromosome)
