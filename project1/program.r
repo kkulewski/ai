@@ -48,3 +48,27 @@ gaResult = rbga.bin(size = 100,
 bestChromosome = gaResult$population[which.min(gaResult$evaluations),]
 
 CnfFitness(cnf4, bestChromosome)
+
+
+
+timeIte = matrix(NA, 10, 10)
+timePop = matrix(NA, 10, 10)
+for (i in 1:10)
+{
+  for (j in 1:10)
+  {
+    timeIte[i, j] = system.time(rbga.bin(size = 100, popSize = 10, iters = 10 * j, mutationChance = 0.10, elitism = T, evalFunc = CnfFitnessGa))[3]
+    timePop[i, j] = system.time(rbga.bin(size = 100, popSize = 10 * j, iters = 10, mutationChance = 0.10, elitism = T, evalFunc = CnfFitnessGa))[3]
+  }
+}
+
+meanIte = c()
+meanPop = c()
+for (i in 1:10)
+{
+  meanIte[i] = mean(timeIte[, i])
+  meanPop[i] = mean(timePop[, i])
+}
+
+
+timePlot = plot(1:10 * 10, meanIte, main = "How number of iterations affects time", xlab = "Iterations", ylab = "time (s)", type="l", col="blue")
