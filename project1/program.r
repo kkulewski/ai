@@ -29,6 +29,7 @@ cnf4 = CnfParse("./cnf/CBS_k3_n100_m403_b10_0.cnf")
 CnfFitness(cnf4, chr4)
 
 
+
 # GA 
 install.packages("genalg")
 library(genalg)
@@ -51,24 +52,143 @@ CnfFitness(cnf4, bestChromosome)
 
 
 
-timeIte = matrix(NA, 10, 10)
-timePop = matrix(NA, 10, 10)
+## iter / pop : time / score
+
+sampleRangeEnd = 50
+
+scorIte = matrix(NA, 10, sampleRangeEnd)
+timeIte = matrix(NA, 10, sampleRangeEnd)
+
+scorPop = matrix(NA, 10, sampleRangeEnd)
+timePop = matrix(NA, 10, sampleRangeEnd)
+
+sampleRange = 1:sampleRangeEnd
+
 for (i in 1:10)
 {
-  for (j in 1:10)
+  for (j in sampleRange)
   {
-    timeIte[i, j] = system.time(rbga.bin(size = 100, popSize = 10, iters = 10 * j, mutationChance = 0.10, elitism = T, evalFunc = CnfFitnessGa))[3]
-    timePop[i, j] = system.time(rbga.bin(size = 100, popSize = 10 * j, iters = 10, mutationChance = 0.10, elitism = T, evalFunc = CnfFitnessGa))[3]
+    timeIte[i, j] = system.time(rbga.bin(size = 100, popSize = 25, iters = 10 * j, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+    iteGa = rbga.bin(size = 100, popSize = 25, iters = 10 * j, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa)
+    scorIte[i, j] = min(iteGa$evaluations)
+      
+    timePop[i, j] = system.time(rbga.bin(size = 100, popSize = 10 * j, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+    popGa = rbga.bin(size = 100, popSize = 10 * j, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa)
+    scorPop[i, j] = min(popGa$evaluations)
   }
 }
 
-meanIte = c()
-meanPop = c()
-for (i in 1:10)
+
+meanScorIte = c()
+meanTimeIte = c()
+
+meanScorPop = c()
+meanTimePop = c()
+
+for (i in sampleRange)
 {
-  meanIte[i] = mean(timeIte[, i])
-  meanPop[i] = mean(timePop[, i])
+  meanScorIte[i] = mean(scorIte[, i])
+  meanTimeIte[i] = mean(timeIte[, i])
+  
+  meanScorPop[i] = mean(scorPop[, i])
+  meanTimePop[i] = mean(timePop[, i])
 }
 
 
-timePlot = plot(1:10 * 10, meanIte, main = "How number of iterations affects time", xlab = "Iterations", ylab = "time (s)", type="l", col="blue")
+scorPlotIte = plot(sampleRange * 10, meanScorIte, main = "Liczba iteracji a wynik", xlab = "Liczba iteracji", ylab = "niespełnione klauzule", type="l", col="blue")
+timePlotIte = plot(sampleRange * 10, meanTimeIte, main = "Liczba iteracji a czas", xlab = "Liczba iteracji", ylab = "czas (sekundy)", type="l", col="blue")
+
+scorPlotPop = plot(sampleRange * 10, meanScorPop, main = "Wielkość populacji a wynik", xlab = "Wielkość populacji", ylab = "niespełnione klauzule", type="l", col="green")
+timePlotPop = plot(sampleRange * 10, meanTimePop, main = "Wielkość populacji a czas", xlab = "Wielkość populacji", ylab = "czas (sekundy)", type="l", col="green")
+
+
+
+## mutation chance : score
+
+scorMut = matrix(NA, 20, 26)
+
+for (i in 1:20)
+{
+  for (j in 0:25)
+  {
+    mutGa = rbga.bin(size = 100, popSize = 50, iters = 50, mutationChance = j/100, elitism = T, evalFunc = CnfFitnessGa)
+    scorMut[i, j + 1] = min(mutGa$evaluations)
+  }
+}
+
+meanScorMut = c()
+
+for (i in 1:26)
+{
+  meanScorMut[i] = mean(scorMut[, i])
+}
+
+scorPlotPop = plot(0:25, meanScorMut, main = "Szansa mutacji a wynik", xlab = "% szansy mutacji", ylab = "niespełnione klauzule", type="l", col="violet")
+
+
+
+## elitism : score
+
+scorEli = matrix(NA, 20, 2)
+
+for (i in 1:20)
+{
+  eliOfGa = rbga.bin(size = 100, popSize = 50, iters = 50, mutationChance = 0.02, elitism = F, evalFunc = CnfFitnessGa)
+  scorEli[i, 1] = min(eliOfGa$evaluations)
+  eliOnGa = rbga.bin(size = 100, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa)
+  scorEli[i, 2] = min(eliOnGa$evaluations) 
+}
+
+meanEliOf = mean(scorEli[, 1])
+meanEliOn = mean(scorEli[, 2]) 
+100 - meanEliOf
+100 - meanEliOn
+
+
+
+## instance size : time
+
+cnf050 = CnfParse("./cnf/prog/uf50-01.cnf")
+cnf075 = CnfParse("./cnf/prog/uf75-01.cnf")
+cnf100 = CnfParse("./cnf/prog/uf100-01.cnf")
+cnf125 = CnfParse("./cnf/prog/uf125-01.cnf")
+cnf150 = CnfParse("./cnf/prog/uf150-01.cnf")
+cnf175 = CnfParse("./cnf/prog/uf175-01.cnf")
+cnf200 = CnfParse("./cnf/prog/uf200-01.cnf")
+cnf225 = CnfParse("./cnf/prog/uf225-01.cnf")
+cnf250 = CnfParse("./cnf/prog/uf250-01.cnf")
+
+ga050 = function(chromosome) { return (CnfFitness(cnf050, chromosome)) }
+ga075 = function(chromosome) { return (CnfFitness(cnf075, chromosome)) }
+ga100 = function(chromosome) { return (CnfFitness(cnf100, chromosome)) }
+ga125 = function(chromosome) { return (CnfFitness(cnf125, chromosome)) }
+ga150 = function(chromosome) { return (CnfFitness(cnf150, chromosome)) }
+ga175 = function(chromosome) { return (CnfFitness(cnf175, chromosome)) }
+ga200 = function(chromosome) { return (CnfFitness(cnf200, chromosome)) }
+ga225 = function(chromosome) { return (CnfFitness(cnf225, chromosome)) }
+ga250 = function(chromosome) { return (CnfFitness(cnf250, chromosome)) }
+
+timeVar = matrix(NA, 5, 9)
+
+for (i in 1:5)
+{
+  timeVar[i, 1] = system.time(rbga.bin(size = 50, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 2] = system.time(rbga.bin(size = 75, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 3] = system.time(rbga.bin(size = 100, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 4] = system.time(rbga.bin(size = 125, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 5] = system.time(rbga.bin(size = 150, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 6] = system.time(rbga.bin(size = 175, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 7] = system.time(rbga.bin(size = 200, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 8] = system.time(rbga.bin(size = 225, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 9] = system.time(rbga.bin(size = 250, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+}
+
+
+meanTimeVar = c()
+
+for (i in 1:9)
+{
+  meanTimeVar[i] = mean(timeVar[, i])
+}
+
+timePlotIte = plot(c(50, 75, 100, 125, 150, 175, 200, 225, 250), meanTimeVar, main = "Liczba zmiennych a czas", xlab = "Liczba zmiennych", ylab = "czas (sekundy)", type="l", col="blue")
