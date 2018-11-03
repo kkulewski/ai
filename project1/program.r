@@ -172,15 +172,15 @@ timeVar = matrix(NA, 5, 9)
 
 for (i in 1:5)
 {
-  timeVar[i, 1] = system.time(rbga.bin(size = 50, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 2] = system.time(rbga.bin(size = 75, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 3] = system.time(rbga.bin(size = 100, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 4] = system.time(rbga.bin(size = 125, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 5] = system.time(rbga.bin(size = 150, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 6] = system.time(rbga.bin(size = 175, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 7] = system.time(rbga.bin(size = 200, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 8] = system.time(rbga.bin(size = 225, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
-  timeVar[i, 9] = system.time(rbga.bin(size = 250, popSize = 25, iters = 25, mutationChance = 0.02, elitism = T, evalFunc = CnfFitnessGa))[3]
+  timeVar[i, 1] = system.time(rbga.bin(size = 50, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga050))[3]
+  timeVar[i, 2] = system.time(rbga.bin(size = 75, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga075))[3]
+  timeVar[i, 3] = system.time(rbga.bin(size = 100, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga100))[3]
+  timeVar[i, 4] = system.time(rbga.bin(size = 125, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga125))[3]
+  timeVar[i, 5] = system.time(rbga.bin(size = 150, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga150))[3]
+  timeVar[i, 6] = system.time(rbga.bin(size = 175, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga175))[3]
+  timeVar[i, 7] = system.time(rbga.bin(size = 200, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga200))[3]
+  timeVar[i, 8] = system.time(rbga.bin(size = 225, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga225))[3]
+  timeVar[i, 9] = system.time(rbga.bin(size = 250, popSize = 50, iters = 50, mutationChance = 0.02, elitism = T, evalFunc = ga250))[3]
 }
 
 
