@@ -116,6 +116,7 @@ nbs.real = db.test[,9]
 nbs.conf.matrix = table(nbs.predicted, nbs.real)
 nbs.accuracy = sum(diag(nbs.conf.matrix)) / sum(nbs.conf.matrix)
 
+
 ## 3.4 Klasyfikacja ...
 
 
@@ -126,3 +127,18 @@ nbs.conf.matrix
 ctr.accuracy
 knn.accuracy
 nbs.accuracy
+
+
+
+### 4. Grupowanie
+
+#install.packages("editrules")
+library("editrules")
+
+db.pca = prcomp(db.nz.norm[,1:8])
+db.pca.predict = predict(db.pca)
+
+db.kmeans <- kmeans(db.pca.predict, 2)
+
+plot(db.pca.predict, col = db.kmeans[["cluster"]])
+points(db.kmeans[["centers"]], col = 1:2, pch = 16, cex=2)
