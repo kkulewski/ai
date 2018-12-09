@@ -138,5 +138,38 @@ knn.accuracy
 nbs.accuracy
 rfo.accuracy
 
+# TPR, FNR
 P = nrow(subset(db.test,Outcome == "healthy"))
 N = nrow(subset(db.test,Outcome == "sick"))
+
+# CTR
+ctr.TP = ctr.conf.matrix[1,1]
+ctr.FN = ctr.conf.matrix[2,1]
+ctr.TPR = (ctr.TP/(ctr.TP+ctr.FN))
+ctr.FP = ctr.conf.matrix[1,2]
+ctr.TN = ctr.conf.matrix[2,2]
+ctr.FNR = (ctr.FP/(ctr.FP+ctr.TN))
+
+# KNN
+knn.TP = knn.conf.matrix[1,1]
+knn.FN = knn.conf.matrix[2,1]
+knn.TPR = (knn.TP/(knn.TP+knn.FN))
+knn.FP = knn.conf.matrix[1,2]
+knn.TN = knn.conf.matrix[2,2]
+knn.FNR = (knn.FP/(knn.FP+knn.TN))
+
+# NBS
+nbs.TP = nbs.conf.matrix[1,1]
+nbs.FN = nbs.conf.matrix[2,1]
+nbs.TPR = (nbs.TP/(nbs.TP+nbs.FN))
+nbs.FP = nbs.conf.matrix[1,2]
+nbs.TN = nbs.conf.matrix[2,2]
+nbs.FNR = (nbs.FP/(nbs.FP+nbs.TN))
+
+# RFO
+rfo.TP = rfo.conf.matrix[1,1]
+rfo.FN = rfo.conf.matrix[2,1]
+rfo.TPR = (rfo.TP/(rfo.TP+rfo.FN))
+rfo.FP = rfo.conf.matrix[1,2]
+rfo.TN = rfo.conf.matrix[2,2]
+rfo.FNR = (rfo.FP/(rfo.FP+rfo.TN))
