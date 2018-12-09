@@ -63,25 +63,25 @@ db.nz$Outcome
 # Normalizacja danych
 
 fnorm = function(x) { return ((x-min(x))/(max(x)-min(x))) }
-
-db.nz$Pregnancies = fnorm(db.nz$Pregnancies)
-db.nz$Glucose = fnorm(db.nz$Glucose)
-db.nz$BloodPressure = fnorm(db.nz$BloodPressure)
-db.nz$SkinThickness = fnorm(db.nz$SkinThickness)
-db.nz$Insulin = fnorm(db.nz$Insulin)
-db.nz$BMI = fnorm(db.nz$BMI)
-db.nz$DiabetesPedigreeFunction = fnorm(db.nz$DiabetesPedigreeFunction)
-db.nz$Age = fnorm(db.nz$Age)
+db.nz.norm = db.nz
+db.nz.norm$Pregnancies = fnorm(db.nz$Pregnancies)
+db.nz.norm$Glucose = fnorm(db.nz$Glucose)
+db.nz.norm$BloodPressure = fnorm(db.nz$BloodPressure)
+db.nz.norm$SkinThickness = fnorm(db.nz$SkinThickness)
+db.nz.norm$Insulin = fnorm(db.nz$Insulin)
+db.nz.norm$BMI = fnorm(db.nz$BMI)
+db.nz.norm$DiabetesPedigreeFunction = fnorm(db.nz$DiabetesPedigreeFunction)
+db.nz.norm$Age = fnorm(db.nz$Age)
 
 # Podzial na grupe treningowa i testowa
 set.seed(1234)
-ind <- sample(2, nrow(db.nz), replace=TRUE, prob=c(0.8, 0.2))
-db.training <- db.nz[ind==1, 1:9]
-db.test <- db.nz[ind==2, 1:9]
+ind <- sample(2, nrow(db.nz.norm), replace=TRUE, prob=c(0.8, 0.2))
+db.training <- db.nz.norm[ind==1, 1:9]
+db.test <- db.nz.norm[ind==2, 1:9]
 
 ## 3.1 Klasyfikacja drzewami
 #install.packages("party")
-#library("party")
+library("party")
 
 db.ctree = ctree(Outcome ~ ., data = db.training)
 
@@ -94,7 +94,7 @@ ctr.accuracy = sum(diag(ctr.conf.matrix)) / sum(ctr.conf.matrix)
 
 ## 3.2 Klasyfikacja KNN
 #install.packages("class")
-#library("class")
+library("class")
 
 db.knn3 = knn(db.training[,1:8], db.test[,1:8], cl=db.training[,9], k = 3, prob=FALSE)
 
@@ -106,7 +106,7 @@ knn.accuracy = sum(diag(knn.conf.matrix)) / sum(knn.conf.matrix)
 
 ## 3.3 Klasyfikacja Naive-Bayes
 #install.packages("e1071")
-#library("e1071")
+library("e1071")
 
 db.naiveBayes = naiveBayes(db.training[,1:8], db.training[,9])
 
