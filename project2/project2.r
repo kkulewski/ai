@@ -148,7 +148,9 @@ ctr.FN = ctr.conf.matrix[2,1]
 ctr.TPR = (ctr.TP/(ctr.TP+ctr.FN))
 ctr.FP = ctr.conf.matrix[1,2]
 ctr.TN = ctr.conf.matrix[2,2]
-ctr.FNR = (ctr.FP/(ctr.FP+ctr.TN))
+ctr.FPR = (ctr.FP/(ctr.FP+ctr.TN))
+ctr.TPR
+ctr.FPR
 
 # KNN
 knn.TP = knn.conf.matrix[1,1]
@@ -156,7 +158,9 @@ knn.FN = knn.conf.matrix[2,1]
 knn.TPR = (knn.TP/(knn.TP+knn.FN))
 knn.FP = knn.conf.matrix[1,2]
 knn.TN = knn.conf.matrix[2,2]
-knn.FNR = (knn.FP/(knn.FP+knn.TN))
+knn.FPR = (knn.FP/(knn.FP+knn.TN))
+knn.TPR
+knn.FPR
 
 # NBS
 nbs.TP = nbs.conf.matrix[1,1]
@@ -164,7 +168,9 @@ nbs.FN = nbs.conf.matrix[2,1]
 nbs.TPR = (nbs.TP/(nbs.TP+nbs.FN))
 nbs.FP = nbs.conf.matrix[1,2]
 nbs.TN = nbs.conf.matrix[2,2]
-nbs.FNR = (nbs.FP/(nbs.FP+nbs.TN))
+nbs.FPR = (nbs.FP/(nbs.FP+nbs.TN))
+nbs.TPR
+nbs.FPR
 
 # RFO
 rfo.TP = rfo.conf.matrix[1,1]
@@ -172,4 +178,15 @@ rfo.FN = rfo.conf.matrix[2,1]
 rfo.TPR = (rfo.TP/(rfo.TP+rfo.FN))
 rfo.FP = rfo.conf.matrix[1,2]
 rfo.TN = rfo.conf.matrix[2,2]
-rfo.FNR = (rfo.FP/(rfo.FP+rfo.TN))
+rfo.FPR = (rfo.FP/(rfo.FP+rfo.TN))
+rfo.TPR
+rfo.FPR
+
+# accuracy
+barplot(c(ctr.accuracy, knn.accuracy, nbs.accuracy, rfo.accuracy),
+        main = "Dokładność klasyfikatorów",
+        names.arg = c("Drzewa dec.", "KNN", "Naive-Bayes", "Lasy los."),
+        ylim = c(0.0, 1.0),
+        col = rainbow(5))
+
+# ROC plot
