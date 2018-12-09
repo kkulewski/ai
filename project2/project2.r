@@ -276,5 +276,13 @@ second.cluster.healthy.ratio
 first.cluster.sick.ratio
 second.cluster.sick.ratio
 
+length(which(db.kmeans$cluster == 1))
+length(which(db.kmeans$cluster == 2))
+first.cluster.rows = nrow(db.kmeans$cluster[])
+second.cluster.rows = nrow(db.kmeans$cluster[which(db.kmeans$cluster == 2)])
+
+first.cluster.rows
+second.cluster.rows
+
 
 ### 
