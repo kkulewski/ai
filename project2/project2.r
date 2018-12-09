@@ -300,3 +300,49 @@ third.cluster.sick.ratio
 
 
 ### 5. Reguly asocjacyjne
+
+pregnancies.mean = mean(db.nz.norm$Pregnancies)
+glucose.mean = mean(db.nz.norm$Glucose)
+bloodPressure.mean = mean(db.nz.norm$BloodPressure)
+skinThickness.mean = mean(db.nz.norm$SkinThickness)
+insulin.mean = mean(db.nz.norm$Insulin)
+bmi.mean = mean(db.nz.norm$BMI)
+dpf.mean = mean(db.nz.norm$DiabetesPedigreeFunction)
+age.mean = mean(db.nz.norm$Age)
+
+highOrLow = function (x, mean)
+{
+  if (x > mean) return ("High")
+  else return ("Low")
+}
+
+db.as = db.nz.norm
+db.as$Pregnancies = sapply(db.as$Pregnancies, as.character)
+db.as$Glucose = sapply(db.as$Glucose, as.character)
+db.as$BloodPressure = sapply(db.as$BloodPressure, as.character)
+db.as$SkinThickness = sapply(db.as$SkinThickness, as.character)
+db.as$Insulin = sapply(db.as$Insulin, as.character)
+db.as$BMI = sapply(db.as$BMI, as.character)
+db.as$DiabetesPedigreeFunction = sapply(db.as$DiabetesPedigreeFunction, as.character)
+db.as$Age = sapply(db.as$Age, as.character)
+
+for (i in nrow(db.nz.norm))
+{
+  db.as$Pregnancies[i] = highOrLow(db.nz.norm$Pregnancies[i], pregnancies.mean)
+  db.as$Glucose[i] = highOrLow(db.nz.norm$Glucose[i], glucose.mean)
+  db.as$BloodPressure[i] = highOrLow(db.nz.norm$BloodPressure[i], bloodPressure.mean)
+  db.as$SkinThickness[i] = highOrLow(db.nz.norm$SkinThickness[i], skinThickness.mean)
+  db.as$Insulin[i] = highOrLow(db.nz.norm$Insulin[i], insulin.mean)
+  db.as$BMI[i] = highOrLow(db.nz.norm$BMI[i], bmi.mean)
+  db.as$DiabetesPedigreeFunction[i] = highOrLow(db.nz.norm$DiabetesPedigreeFunction[i], dpf.mean)
+  db.as$Age[i] = highOrLow(db.nz.norm$Age[i], age.mean)
+}
+
+db.as$Pregnancies = sapply(db.as$Pregnancies, as.factor)
+db.as$Glucose = sapply(db.as$Glucose, as.factor)
+db.as$BloodPressure = sapply(db.as$BloodPressure, as.factor)
+db.as$SkinThickness = sapply(db.as$SkinThickness, as.factor)
+db.as$Insulin = sapply(db.as$Insulin, as.factor)
+db.as$BMI = sapply(db.as$BMI, as.factor)
+db.as$DiabetesPedigreeFunction = sapply(db.as$DiabetesPedigreeFunction, as.factor)
+db.as$Age = sapply(db.as$Age, as.factor)
