@@ -353,9 +353,6 @@ db.a$Outcome = sapply(db.a$Outcome, as.factor)
 #install.packages("arules")
 library(arules)
 
-rules = apriori(db.a)
-inspect(rules)
-
 rules = apriori(db.a,
                  parameter = list(minlen=2, supp=0.005, conf=0.8),
                  appearance = list(rhs=c("Outcome=Healthy", "Outcome=Sick"), default="lhs"),
