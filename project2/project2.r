@@ -187,6 +187,33 @@ barplot(c(ctr.accuracy, knn.accuracy, nbs.accuracy, rfo.accuracy),
         main = "Dokładność klasyfikatorów",
         names.arg = c("Drzewa dec.", "KNN", "Naive-Bayes", "Lasy los."),
         ylim = c(0.0, 1.0),
-        col = rainbow(5))
+        col = c("red", "green", "blue", "purple"))
 
 # ROC plot
+roc = data.frame(
+  "Name" = c("DC", "KNN", "NB", "RF", "Ideal"),
+  "FPR" = c(ctr.FPR, knn.FPR, nbs.FPR, rfo.FPR, 0.0),
+  "TPR" = c(ctr.TPR, knn.TPR, nbs.TPR, rfo.TPR, 1.0)
+  )
+
+roc
+
+plot(
+  roc$FPR,
+  roc$TPR,
+  xlab = "False Positive Rate",
+  ylab = "True Positive Rate",
+  main = "ROC Space",
+  xlim=c(0.0, 1.0),
+  ylim=c(0.0, 1.0),
+  cex = 1.5,
+  pch = 18,
+  col=c("red", "green", "purple", "blue", "gray")
+  )
+
+text(
+  roc$FPR,
+  roc$TPR,
+  roc$Name,
+  cex= 0.7,
+  pos = 1)
