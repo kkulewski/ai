@@ -22,8 +22,8 @@
 
 ### 1. Wczytujemy baze + westepne ogledziny
 db <- read.csv('diabetes.csv', header=TRUE, sep=',')
-db
-summary(db)
+#db
+#summary(db)
 
 
 
@@ -54,7 +54,6 @@ for (i in 1:nrow(db))
 
 # Trzeba jeszcze zmienic wartosci outcome 0 i 1 na "healthy" i "sick"
 db.nz$Outcome = factor(db.nz$Outcome, level=0:1, labels=c("healthy", "sick"))
-db.nz$Outcome
 
 
 
@@ -117,56 +116,24 @@ nbs.conf.matrix = table(nbs.predicted, nbs.real)
 nbs.accuracy = sum(diag(nbs.conf.matrix)) / sum(nbs.conf.matrix)
 
 
-## 3.4 Klasyfikacja ...
+## 3.4 Klasyfikacja Lasy Losowe
+#install.packages("randomForest")
+library("randomForest")
 
+db.rfo = randomForest(Outcome ~ ., data=db.training)
+
+# Macierz bledu i dokladnosc
+rfo.predicted = predict(db.rfo, db.test[,1:8])
+rfo.real = db.test[,9]
+rfo.conf.matrix = table(rfo.predicted, rfo.real)
+rfo.accuracy = sum(diag(rfo.conf.matrix)) / sum(rfo.conf.matrix)
 
 ## 3.5 Zestawienie
 ctr.conf.matrix
 knn.conf.matrix
 nbs.conf.matrix
+rfo.conf.matrix
 ctr.accuracy
 knn.accuracy
 nbs.accuracy
-
-
-
-### 4. Grupowanie
-
-#install.packages("editrules")
-library("editrules")
-
-db.pca = prcomp(db.nz.norm[,1:8])
-db.pca.predict = predict(db.pca)
-
-db.kmeans <- kmeans(db.pca.predict, 2)
-
-plot(db.pca.predict, col = db.kmeans[["cluster"]])
-points(db.kmeans[["centers"]], col = 1:2, pch = 16, cex=2)
-
-
-
-### 5. Reguly asocjacyjne
-
-# install.packages("arules")
-library("arules")
-
-rules = apriori(db.nz.norm)
-inspect(rules)
-
-rules = apriori(db.nz,
-                parameter = list(minlen=2, supp=0.005, conf=0.8),
-                appearance = list(rhs=c("Outcome=Healthy", "Outcome=Sick"), default="lhs"),
-                control = list(verbose=F)
-                )
-
-rules.sorted = sort(rules, by="lift")
-inspect(rules.sorted)
-
-subset.matrix = is.subset(rules.sorted, rules.sorted)
-subset.matrix[lower.tri(subset.matrix, diag=T)] = FALSE
-redundant <- colSums(subset.matrix, na.rm=T) >= 1
-which(redundant)
-
-rules.pruned <- rules.sorted[!redundant]
-inspect(rules.pruned)
-
+rfo.accuracy
