@@ -55,6 +55,7 @@ for (i in 1:nrow(db))
 # Trzeba jeszcze zmienic wartosci outcome 0 i 1 na "healthy" i "sick"
 db.nz$Outcome = factor(db.nz$Outcome, level=0:1, labels=c("healthy", "sick"))
 
+db.nz
 
 
 ### 3. Klasyfikacja
@@ -217,3 +218,63 @@ text(
   roc$Name,
   cex= 0.7,
   pos = 1)
+
+
+
+### 4. Grupowanie
+
+#install.packages("editrules)
+library("editrules")
+
+
+db.pca = prcomp(db.nz.norm[,1:8])
+db.pca.predict = predict(db.pca)
+db.kmeans = kmeans(db.pca.predict, 2)
+
+plot(db.pca.predict, col = db.kmeans[["cluster"]], main = "Metoda k-średnich (2 klastry)")
+points(db.kmeans[["centers"]], col = 1:8, pch = 16, cex = 1.8)
+
+# liczymy odsetek zdrowych i chorych osob w klastrach
+first.cluster.healthy = 0
+first.cluster.sick = 0
+second.cluster.healthy = 0
+second.cluster.sick = 0
+
+for (i in 1:nrow(db.nz.norm))
+{
+  if (db.kmeans$cluster[i] == 1)
+  {
+    if (db.nz.norm$Outcome[i] == "healthy") first.cluster.healthy = first.cluster.healthy + 1
+    else first.cluster.sick = first.cluster.sick + 1
+  }
+  else
+  {
+    if (db.nz.norm$Outcome[i] == "healthy") second.cluster.healthy = second.cluster.healthy + 1
+    else second.cluster.sick = second.cluster.sick + 1
+  }
+}
+
+# ilosc 
+healthy = nrow(subset(db.nz.norm,Outcome == "healthy"))
+sick = nrow(subset(db.nz.norm,Outcome == "sick"))
+
+healthy
+first.cluster.healthy
+first.cluster.healthy.ratio = first.cluster.healthy / healthy
+second.cluster.healthy
+second.cluster.healthy.ratio = second.cluster.healthy / healthy
+
+sick
+first.cluster.sick
+first.cluster.sick.ratio = first.cluster.sick / sick
+second.cluster.sick
+second.cluster.sick.ratio = second.cluster.sick / sick
+
+
+first.cluster.healthy.ratio
+second.cluster.healthy.ratio
+first.cluster.sick.ratio
+second.cluster.sick.ratio
+
+
+### 
