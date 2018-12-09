@@ -312,37 +312,62 @@ age.mean = mean(db.nz.norm$Age)
 
 highOrLow = function (x, mean)
 {
-  if (x > mean) return ("High")
-  else return ("Low")
+  if (x >= mean) { return ("High") }
+  else { return ("Low") }
 }
 
-db.as = db.nz.norm
-db.as$Pregnancies = sapply(db.as$Pregnancies, as.character)
-db.as$Glucose = sapply(db.as$Glucose, as.character)
-db.as$BloodPressure = sapply(db.as$BloodPressure, as.character)
-db.as$SkinThickness = sapply(db.as$SkinThickness, as.character)
-db.as$Insulin = sapply(db.as$Insulin, as.character)
-db.as$BMI = sapply(db.as$BMI, as.character)
-db.as$DiabetesPedigreeFunction = sapply(db.as$DiabetesPedigreeFunction, as.character)
-db.as$Age = sapply(db.as$Age, as.character)
+db.a = db.nz.norm
+db.a$Pregnancies = sapply(db.a$Pregnancies, as.character)
+db.a$Glucose = sapply(db.a$Glucose, as.character)
+db.a$BloodPressure = sapply(db.a$BloodPressure, as.character)
+db.a$SkinThickness = sapply(db.a$SkinThickness, as.character)
+db.a$Insulin = sapply(db.a$Insulin, as.character)
+db.a$BMI = sapply(db.a$BMI, as.character)
+db.a$DiabetesPedigreeFunction = sapply(db.a$DiabetesPedigreeFunction, as.character)
+db.a$Age = sapply(db.a$Age, as.character)
+db.a$Outcome = sapply(db.a$Outcome, as.character)
 
-for (i in nrow(db.nz.norm))
+for (i in 1:nrow(db.nz.norm))
 {
-  db.as$Pregnancies[i] = highOrLow(db.nz.norm$Pregnancies[i], pregnancies.mean)
-  db.as$Glucose[i] = highOrLow(db.nz.norm$Glucose[i], glucose.mean)
-  db.as$BloodPressure[i] = highOrLow(db.nz.norm$BloodPressure[i], bloodPressure.mean)
-  db.as$SkinThickness[i] = highOrLow(db.nz.norm$SkinThickness[i], skinThickness.mean)
-  db.as$Insulin[i] = highOrLow(db.nz.norm$Insulin[i], insulin.mean)
-  db.as$BMI[i] = highOrLow(db.nz.norm$BMI[i], bmi.mean)
-  db.as$DiabetesPedigreeFunction[i] = highOrLow(db.nz.norm$DiabetesPedigreeFunction[i], dpf.mean)
-  db.as$Age[i] = highOrLow(db.nz.norm$Age[i], age.mean)
+  db.a$Pregnancies[i] = highOrLow(db.nz.norm$Pregnancies[i], pregnancies.mean)
+  db.a$Glucose[i] = highOrLow(db.nz.norm$Glucose[i], glucose.mean)
+  db.a$BloodPressure[i] = highOrLow(db.nz.norm$BloodPressure[i], bloodPressure.mean)
+  db.a$SkinThickness[i] = highOrLow(db.nz.norm$SkinThickness[i], skinThickness.mean)
+  db.a$Insulin[i] = highOrLow(db.nz.norm$Insulin[i], insulin.mean)
+  db.a$BMI[i] = highOrLow(db.nz.norm$BMI[i], bmi.mean)
+  db.a$DiabetesPedigreeFunction[i] = highOrLow(db.nz.norm$DiabetesPedigreeFunction[i], dpf.mean)
+  db.a$Age[i] = highOrLow(db.nz.norm$Age[i], age.mean)
 }
 
-db.as$Pregnancies = sapply(db.as$Pregnancies, as.factor)
-db.as$Glucose = sapply(db.as$Glucose, as.factor)
-db.as$BloodPressure = sapply(db.as$BloodPressure, as.factor)
-db.as$SkinThickness = sapply(db.as$SkinThickness, as.factor)
-db.as$Insulin = sapply(db.as$Insulin, as.factor)
-db.as$BMI = sapply(db.as$BMI, as.factor)
-db.as$DiabetesPedigreeFunction = sapply(db.as$DiabetesPedigreeFunction, as.factor)
-db.as$Age = sapply(db.as$Age, as.factor)
+db.a$Pregnancies = sapply(db.a$Pregnancies, as.factor)
+db.a$Glucose = sapply(db.a$Glucose, as.factor)
+db.a$BloodPressure = sapply(db.a$BloodPressure, as.factor)
+db.a$SkinThickness = sapply(db.a$SkinThickness, as.factor)
+db.a$Insulin = sapply(db.a$Insulin, as.factor)
+db.a$BMI = sapply(db.a$BMI, as.factor)
+db.a$DiabetesPedigreeFunction = sapply(db.a$DiabetesPedigreeFunction, as.factor)
+db.a$Age = sapply(db.a$Age, as.factor)
+db.a$Outcome = sapply(db.a$Outcome, as.factor)
+
+
+#install.packages("arules")
+library(arules)
+
+rules = apriori(db.a)
+inspect(rules)
+
+rules = apriori(db.a,
+                 parameter = list(minlen=2, supp=0.005, conf=0.8),
+                 appearance = list(rhs=c("Outcome=Healthy", "Outcome=Sick"), default="lhs"),
+                 control = list(verbose=F))
+
+rules.sorted = sort(rules, by="lift")
+inspect(rules.sorted)
+
+subset.matrix = is.subset(rules.sorted, rules.sorted)
+subset.matrix[lower.tri(subset.matrix, diag=T)] = FALSE
+redundant = colSums(subset.matrix, na.rm=T) >= 1
+
+rules.pruned = rules.sorted[!redundant]
+rules.pruned.sorted = sort(rules.pruned, by="lift")
+inspect(rules.pruned.sorted)
