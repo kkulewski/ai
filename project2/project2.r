@@ -142,3 +142,31 @@ db.kmeans <- kmeans(db.pca.predict, 2)
 
 plot(db.pca.predict, col = db.kmeans[["cluster"]])
 points(db.kmeans[["centers"]], col = 1:2, pch = 16, cex=2)
+
+
+
+### 5. Reguly asocjacyjne
+
+# install.packages("arules")
+library("arules")
+
+rules = apriori(db.nz.norm)
+inspect(rules)
+
+rules = apriori(db.nz,
+                parameter = list(minlen=2, supp=0.005, conf=0.8),
+                appearance = list(rhs=c("Outcome=Healthy", "Outcome=Sick"), default="lhs"),
+                control = list(verbose=F)
+                )
+
+rules.sorted = sort(rules, by="lift")
+inspect(rules.sorted)
+
+subset.matrix = is.subset(rules.sorted, rules.sorted)
+subset.matrix[lower.tri(subset.matrix, diag=T)] = FALSE
+redundant <- colSums(subset.matrix, na.rm=T) >= 1
+which(redundant)
+
+rules.pruned <- rules.sorted[!redundant]
+inspect(rules.pruned)
+
