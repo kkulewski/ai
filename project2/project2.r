@@ -92,15 +92,37 @@ ctr.conf.matrix = table(ctr.predicted, ctr.real)
 ctr.accuracy = sum(diag(ctr.conf.matrix)) / sum(ctr.conf.matrix)
 
 
-## 3.2 Klasyfikacja Naive-Bayes
+## 3.2 Klasyfikacja KNN
 #install.packages("class")
 #library("class")
 
-db.knn3 = knn(db.training[,1:8], db.test[,1:8], cl=db.training[,9], k = 2, prob=FALSE)
+db.knn3 = knn(db.training[,1:8], db.test[,1:8], cl=db.training[,9], k = 3, prob=FALSE)
 
 # Macierz bledu i dokladnosc
 knn.predicted = db.knn3
 knn.real = db.test[,9]
 knn.conf.matrix = table(knn.predicted, knn.real)
 knn.accuracy = sum(diag(knn.conf.matrix)) / sum(knn.conf.matrix)
+
+## 3.3 Klasyfikacja Naive-Bayes
+#install.packages("e1071")
+#library("e1071")
+
+db.naiveBayes = naiveBayes(db.training[,1:8], db.training[,9])
+
+# Macierz bledu i dokladnosc
+nbs.predicted = predict(db.naiveBayes, db.test[,1:8])
+nbs.real = db.test[,9]
+nbs.conf.matrix = table(nbs.predicted, nbs.real)
+nbs.accuracy = sum(diag(nbs.conf.matrix)) / sum(nbs.conf.matrix)
+
+## 3.4 Klasyfikacja ...
+
+
+## 3.5 Zestawienie
+ctr.conf.matrix
 knn.conf.matrix
+nbs.conf.matrix
+ctr.accuracy
+knn.accuracy
+nbs.accuracy
