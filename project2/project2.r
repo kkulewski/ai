@@ -137,3 +137,6 @@ ctr.accuracy
 knn.accuracy
 nbs.accuracy
 rfo.accuracy
+
+P = nrow(subset(db.test,Outcome == "healthy"))
+N = nrow(subset(db.test,Outcome == "sick"))
