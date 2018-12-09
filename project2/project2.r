@@ -229,9 +229,9 @@ library("editrules")
 
 db.pca = prcomp(db.nz.norm[,1:8])
 db.pca.predict = predict(db.pca)
-db.kmeans = kmeans(db.pca.predict, 2)
+db.kmeans = kmeans(db.pca.predict, 3)
 
-plot(db.pca.predict, col = db.kmeans[["cluster"]], main = "Metoda k-średnich (2 klastry)")
+plot(db.pca.predict, col = db.kmeans[["cluster"]], main = "Metoda k-średnich (3 klastry)")
 points(db.kmeans[["centers"]], col = 1:8, pch = 16, cex = 1.8)
 
 # liczymy odsetek zdrowych i chorych osob w klastrach
@@ -239,6 +239,8 @@ first.cluster.healthy = 0
 first.cluster.sick = 0
 second.cluster.healthy = 0
 second.cluster.sick = 0
+third.cluster.healthy = 0
+third.cluster.sick = 0
 
 for (i in 1:nrow(db.nz.norm))
 {
@@ -247,10 +249,15 @@ for (i in 1:nrow(db.nz.norm))
     if (db.nz.norm$Outcome[i] == "healthy") first.cluster.healthy = first.cluster.healthy + 1
     else first.cluster.sick = first.cluster.sick + 1
   }
-  else
+  else if (db.kmeans$cluster[i] == 2)
   {
     if (db.nz.norm$Outcome[i] == "healthy") second.cluster.healthy = second.cluster.healthy + 1
     else second.cluster.sick = second.cluster.sick + 1
+  }
+  else
+  {
+    if (db.nz.norm$Outcome[i] == "healthy") third.cluster.healthy = third.cluster.healthy + 1
+    else third.cluster.sick = third.cluster.sick + 1
   }
 }
 
@@ -258,31 +265,38 @@ for (i in 1:nrow(db.nz.norm))
 healthy = nrow(subset(db.nz.norm,Outcome == "healthy"))
 sick = nrow(subset(db.nz.norm,Outcome == "sick"))
 
+first.cluster.rows = length(which(db.kmeans$cluster == 1))
+second.cluster.rows = length(which(db.kmeans$cluster == 2))
+third.cluster.rows = length(which(db.kmeans$cluster == 3))
+
+first.cluster.rows
+second.cluster.rows
+third.cluster.rows
+
 healthy
 first.cluster.healthy
-first.cluster.healthy.ratio = first.cluster.healthy / healthy
+first.cluster.healthy.ratio = first.cluster.healthy / first.cluster.rows
 second.cluster.healthy
-second.cluster.healthy.ratio = second.cluster.healthy / healthy
+second.cluster.healthy.ratio = second.cluster.healthy / second.cluster.rows
+third.cluster.healthy
+third.cluster.healthy.ratio = third.cluster.healthy / third.cluster.rows
 
 sick
 first.cluster.sick
-first.cluster.sick.ratio = first.cluster.sick / sick
+first.cluster.sick.ratio = first.cluster.sick / first.cluster.rows
 second.cluster.sick
-second.cluster.sick.ratio = second.cluster.sick / sick
+second.cluster.sick.ratio = second.cluster.sick / second.cluster.rows
+third.cluster.sick
+third.cluster.sick.ratio = third.cluster.sick / third.cluster.rows
 
 
 first.cluster.healthy.ratio
 second.cluster.healthy.ratio
+third.cluster.healthy.ratio
 first.cluster.sick.ratio
 second.cluster.sick.ratio
-
-length(which(db.kmeans$cluster == 1))
-length(which(db.kmeans$cluster == 2))
-first.cluster.rows = nrow(db.kmeans$cluster[])
-second.cluster.rows = nrow(db.kmeans$cluster[which(db.kmeans$cluster == 2)])
-
-first.cluster.rows
-second.cluster.rows
+third.cluster.sick.ratio
 
 
-### 
+
+### 5. Reguly asocjacyjne
