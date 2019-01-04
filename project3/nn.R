@@ -26,12 +26,13 @@ for (fileNumber in 2:99)
 {
   data.merged = rbind(data.merged, data.raw[[fileNumber]])
 }
+write.csv(data.merged, file = "0-01-data-merged.csv")
 
 # split invalid first column, drop first part, fix second part header, save
 data.fixed = concat.split(data = data.merged, split.col = "Main.js.143.myTank.x", sep = " ", drop = TRUE)
 data.fixed = data.fixed[, c(51, 1:49)]
 colnames(data.fixed)[colnames(data.fixed) == "Main.js.143.myTank.x_2"] = "myTank.x"
-write.csv(data.fixed, file = "data-fixed.csv")
+write.csv(data.fixed, file = "0-02-data-fixed.csv")
 
 
 
@@ -40,7 +41,7 @@ write.csv(data.fixed, file = "data-fixed.csv")
 ###########
 
 data.stripped = data.fixed[, c(10:16, 50, 1:9, 29:36)]
-write.csv(data.stripped, file = "data-stripped.csv")
+write.csv(data.stripped, file = "0-03-data-stripped.csv")
 
 # INPUT
 # 01 myTank.controls.turnLeft
@@ -76,3 +77,29 @@ write.csv(data.stripped, file = "data-stripped.csv")
 # 25 enemyTank.accelerationY
 
 
+
+#############
+# Normalize #
+#############
+
+norm <- function(x)
+{
+  (x-min(x)) / (max(x)-min(x))
+}
+
+data.norm = norm(data.stripped)
+write.csv(data.norm, file = "0-04-data-normalized.csv")
+
+
+
+##############
+# Neural Net #
+##############
+
+# prepare formula
+out.names = names(data.norm[1:7])
+inp.names = names(data.norm[8:25])
+formula = paste(paste(out.names, collapse = " + "), paste(inp.names, collapse = " + "), sep = " ~ ")
+
+# create NN
+nn.result <- neuralnet(formula = formula, data = data.norm, hidden = 5, threshold = 0.01, stepmax = 1e+04)
