@@ -103,8 +103,34 @@ out.names = names(data.norm[, 1:7])
 inp.names = names(data.norm[, 8:25])
 formula = paste(paste(out.names, collapse = " + "), paste(inp.names, collapse = " + "), sep = " ~ ")
 
-nrow(data.norm)
-
 # create NN
-nn.result <- neuralnet(formula, data.norm, hidden = 7, threshold = 0.1, stepmax = 1e6)
+hidden.amount = 7
+nn.result <- neuralnet(formula, data.norm, hidden = hidden.amount, threshold = 0.1, stepmax = 1e6)
+
 plot(nn.result)
+
+
+
+###########
+# Extract #
+###########
+
+inp.amount = length(inp.names)
+out.amount = length(out.names)
+hid.amount = hidden.amount
+
+bias1 = round(nn.result[["weights"]][[1]][[1]][1,], 6)
+bias2 = round(nn.result[["weights"]][[1]][[2]][1,], 6)
+weig1 <- round(nn.result[["weights"]][[1]][[1]][2:(inp.amount+1),], 8)
+weig2 <- round(nn.result[["weights"]][[1]][[2]][2:(hid.amount+1),], 8)
+
+
+
+########
+# Copy #
+########
+
+toString(bias1)
+toString(bias2)
+write.table(weig1, file="weig1.txt", row.names = FALSE)
+write.table(weig2, file="weig2.txt", row.names = FALSE)
