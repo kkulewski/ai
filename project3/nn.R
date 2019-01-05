@@ -130,7 +130,44 @@ weig2 <- round(nn.result[["weights"]][[1]][[2]][2:(hid.amount+1),], 8)
 # Copy #
 ########
 
-toString(bias1)
-toString(bias2)
+bias1.string = c()
+bias1.string[1] = "["
+bias1.string[2] = toString(bias1)
+bias1.string[3] = "]"
+bias1.text = paste(bias1.string, collapse = '')
+write(bias1.text, "z_bias1.txt")
+
+bias2.string = c()
+bias2.string[1] = "["
+bias2.string[2] = toString(bias2)
+bias2.string[3] = "]"
+bias2.text = paste(bias2.string, collapse = '')
+write(bias2.text, "z_bias2.txt")
+
 write.table(weig1, file="weig1.txt", row.names = FALSE)
+weig1.lines = scan("weig1.txt", what = character(), sep = '\n')
+weig1.lines
+weig1.text = c()
+for (line in 2:length(weig1.lines))
+{
+  weig1.string = c()
+  weig1.string[1] = "["
+  weig1.string[2] = gsub(" ", ", ", weig1.lines[line])
+  weig1.string[3] = "],"
+  weig1.text[line-1] = paste(weig1.string, collapse = '')
+}
+weig1.text
+writeLines(weig1.text, file("z_weig1.txt"))
+
 write.table(weig2, file="weig2.txt", row.names = FALSE)
+weig2.lines = scan("weig2.txt", what = character(), sep = '\n')
+weig2.text = c()
+for (line in 2:length(weig2.lines))
+{
+  weig2.string = c()
+  weig2.string[1] = "["
+  weig2.string[2] = gsub(" ", ", ", weig2.lines[line])
+  weig2.string[3] = "],"
+  weig2.text[line-1] = paste(weig2.string, collapse = '')
+}
+writeLines(weig2.text, file("z_weig2.txt"))
