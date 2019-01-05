@@ -5,6 +5,9 @@
 install.packages("splitstackshape")
 library(splitstackshape)
 
+install.packages("neuralnet")
+library(neuralnet)
+
 
 
 ########
@@ -91,15 +94,17 @@ data.norm = norm(data.stripped)
 write.csv(data.norm, file = "0-04-data-normalized.csv")
 
 
-
 ##############
 # Neural Net #
 ##############
 
 # prepare formula
-out.names = names(data.norm[1:7])
-inp.names = names(data.norm[8:25])
+out.names = names(data.norm[, 1:7])
+inp.names = names(data.norm[, 8:25])
 formula = paste(paste(out.names, collapse = " + "), paste(inp.names, collapse = " + "), sep = " ~ ")
 
+nrow(data.norm)
+
 # create NN
-nn.result <- neuralnet(formula = formula, data = data.norm, hidden = 5, threshold = 0.01, stepmax = 1e+04)
+nn.result <- neuralnet(formula, data.norm, hidden = 7, threshold = 0.1, stepmax = 1e6)
+plot(nn.result)
