@@ -176,7 +176,7 @@ conn = file("z_weig2.txt")
 writeLines(weig2.text, conn)
 close(conn)
 
-conn = file("zz_full.txt")
+conn = file("zz_full.txt", "w+")
 writeLines(weig1.text, conn)
 writeLines("", conn)
 writeLines(bias1.text, conn)
