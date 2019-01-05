@@ -144,8 +144,8 @@ bias2.string[3] = "]"
 bias2.text = paste(bias2.string, collapse = '')
 write(bias2.text, "z_bias2.txt")
 
-write.table(weig1, file="weig1.txt", row.names = FALSE)
-weig1.lines = scan("weig1.txt", what = character(), sep = '\n')
+write.table(weig1, file="z_weig1.txt", row.names = FALSE)
+weig1.lines = scan("z_weig1.txt", what = character(), sep = '\n')
 weig1.lines
 weig1.text = c()
 for (line in 2:length(weig1.lines))
@@ -157,10 +157,12 @@ for (line in 2:length(weig1.lines))
   weig1.text[line-1] = paste(weig1.string, collapse = '')
 }
 weig1.text
-writeLines(weig1.text, file("z_weig1.txt"))
+conn = file("z_weig1.txt")
+writeLines(weig1.text, conn)
+close(conn)
 
-write.table(weig2, file="weig2.txt", row.names = FALSE)
-weig2.lines = scan("weig2.txt", what = character(), sep = '\n')
+write.table(weig2, file="z_weig2.txt", row.names = FALSE)
+weig2.lines = scan("z_weig2.txt", what = character(), sep = '\n')
 weig2.text = c()
 for (line in 2:length(weig2.lines))
 {
@@ -170,4 +172,16 @@ for (line in 2:length(weig2.lines))
   weig2.string[3] = "],"
   weig2.text[line-1] = paste(weig2.string, collapse = '')
 }
-writeLines(weig2.text, file("z_weig2.txt"))
+conn = file("z_weig2.txt")
+writeLines(weig2.text, conn)
+close(conn)
+
+conn = file("zz_full.txt")
+writeLines(weig1.text, conn)
+writeLines("", conn)
+writeLines(bias1.text, conn)
+writeLines("", conn)
+writeLines(weig2.text, conn)
+writeLines("", conn)
+writeLines(bias2.text, conn)
+close(conn)
