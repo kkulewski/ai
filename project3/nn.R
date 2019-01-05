@@ -119,10 +119,10 @@ inp.amount = length(inp.names)
 out.amount = length(out.names)
 hid.amount = hidden.amount
 
-bias1 = round(nn.result[["weights"]][[1]][[1]][1,], 6)
-bias2 = round(nn.result[["weights"]][[1]][[2]][1,], 6)
-weig1 <- round(nn.result[["weights"]][[1]][[1]][2:(inp.amount+1),], 8)
-weig2 <- round(nn.result[["weights"]][[1]][[2]][2:(hid.amount+1),], 8)
+bias1 = round(nn.result[["weights"]][[1]][[1]][1,], 12)
+bias2 = round(nn.result[["weights"]][[1]][[2]][1,], 12)
+weig1 <- round(nn.result[["weights"]][[1]][[1]][2:(inp.amount+1),], 12)
+weig2 <- round(nn.result[["weights"]][[1]][[2]][2:(hid.amount+1),], 12)
 
 
 
