@@ -213,3 +213,23 @@ acc.rrf30
 
 cm.rr
 acc.rr
+
+
+
+###
+### 5. Support Vector Machine
+###
+
+install.packages("e1071")
+library(e1071)
+
+model.svm1radial = svm(train.data[1:100, ],  train.labels[1:100], kernel = "radial", cost = 1)
+
+pred.model.svm1radial = predict(model.svm1radial, test.data)
+
+cm.svm1radial = table(pred.model.svm1radial, test.labels)
+
+acc.svm1radial = sum(diag(cm.svm1radial))/sum(cm.svm1radial)
+
+cm.svm1radial
+acc.svm1radial
