@@ -223,13 +223,35 @@ acc.rr
 install.packages("e1071")
 library(e1071)
 
-model.svm1radial = svm(train.data[1:100, ],  train.labels[1:100], kernel = "radial", cost = 1)
+model.svm1linear = svm(train.data[1:5000, ], train.labels[1:5000], kernel = "linear", cost = 1, scale = FALSE)
+model.svm1radial = svm(train.data[1:5000, ], train.labels[1:5000], kernel = "radial", cost = 1, scale = FALSE)
+model.svm1polyno = svm(train.data[1:5000, ], train.labels[1:5000], kernel = "polynomial", cost = 1, scale = FALSE)
+model.svm = svm(train.data, train.labels, kernel = "polynomial", cost = 1, scale = FALSE)
 
+pred.model.svm1linear = predict(model.svm1linear, test.data)
 pred.model.svm1radial = predict(model.svm1radial, test.data)
+pred.model.svm1polyno = predict(model.svm1polyno, test.data)
+pred.model.svm = predict(model.svm, test.data)
 
+cm.svm1linear = table(pred.model.svm1linear, test.labels)
 cm.svm1radial = table(pred.model.svm1radial, test.labels)
+cm.svm1polyno = table(pred.model.svm1polyno, test.labels)
+cm.svm = table(pred.model.svm, test.labels)
 
+acc.svm1linear = sum(diag(cm.svm1linear))/sum(cm.svm1linear)
 acc.svm1radial = sum(diag(cm.svm1radial))/sum(cm.svm1radial)
+acc.svm1polyno = sum(diag(cm.svm1polyno))/sum(cm.svm1polyno)
+acc.svm = sum(diag(cm.svm))/sum(cm.svm)
+
+
+cm.svm1linear
+acc.svm1linear
 
 cm.svm1radial
 acc.svm1radial
+
+cm.svm1polyno
+acc.svm1polyno
+
+cm.svm
+acc.svm
