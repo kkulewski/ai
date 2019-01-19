@@ -21,6 +21,8 @@ test.data = as.matrix(test[, -1])
 names(train.data) = make.names(names(train.data))
 names(test.data) = make.names(names(test.data))
 
+
+
 ###
 ### 1. RANDOM FOREST
 ###
@@ -66,3 +68,58 @@ acc.rf50n50
 
 cm.rf150n150
 acc.rf150n150
+
+
+
+###
+### 2. Gradient Boosted Trees
+###
+
+install.packages("gbm")
+library(gbm)
+
+model.gbt10i2 = gbm.fit(train.data,  factor(train.labels), distribution="multinomial", n.trees=10, interaction.depth=2)
+model.gbt10i8 = gbm.fit(train.data,  factor(train.labels), distribution="multinomial", n.trees=10, interaction.depth=8)
+model.gbt50i2 = gbm.fit(train.data,  factor(train.labels), distribution="multinomial", n.trees=50, interaction.depth=2)
+model.gbt50i8 = gbm.fit(train.data,  factor(train.labels), distribution="multinomial", n.trees=50, interaction.depth=8)
+model.gbt10i20 = gbm.fit(train.data,  factor(train.labels), distribution="multinomial", n.trees=10, interaction.depth=20)
+
+pred.model.gbt10i2 = apply(predict(model.gbt10i2, data.test, n.trees=model.gbt10i2$n.trees), 1, which.max) - 1L
+pred.model.gbt10i8 = apply(predict(model.gbt10i8, data.test, n.trees=model.gbt10i8$n.trees), 1, which.max) - 1L
+pred.model.gbt50i2 = apply(predict(model.gbt50i2, data.test, n.trees=model.gbt50i2$n.trees), 1, which.max) - 1L
+pred.model.gbt50i8 = apply(predict(model.gbt50i8, data.test, n.trees=model.gbt50i8$n.trees), 1, which.max) - 1L
+pred.model.gbt10i20 = apply(predict(model.gbt10i20, data.test, n.trees=model.gbt10i20$n.trees), 1, which.max) - 1L
+
+cm.gbt10i2 = table(pred.model.gbt10i2, test.labels)
+cm.gbt10i8 = table(pred.model.gbt10i8, test.labels)
+cm.gbt50i2 = table(pred.model.gbt50i2, test.labels)
+cm.gbt50i8 = table(pred.model.gbt50i8, test.labels)
+cm.gbt10i20 = table(pred.model.gbt10i20, test.labels)
+
+acc.gbt10i2 = sum(diag(cm.gbt10i2))/sum(cm.gbt10i2)
+acc.gbt10i8 = sum(diag(cm.gbt10i8))/sum(cm.gbt10i8)
+acc.gbt50i2 = sum(diag(cm.gbt50i2))/sum(cm.gbt50i2)
+acc.gbt50i8 = sum(diag(cm.gbt50i8))/sum(cm.gbt50i8)
+acc.gbt10i20 = sum(diag(cm.gbt10i20))/sum(cm.gbt10i20)
+
+
+cm.gbt10i2
+acc.gbt10i2
+
+cm.gbt10i8
+acc.gbt10i8
+
+cm.gbt50i2
+acc.gbt50i2
+
+cm.gbt50i8
+acc.gbt50i8
+
+cm.gbt10i20
+acc.gbt10i20
+
+
+
+###
+### 3. KNN clustering
+###
