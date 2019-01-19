@@ -255,3 +255,61 @@ acc.svm1polyno
 
 cm.svm
 acc.svm
+
+
+
+###
+### 6. Deep Neural Network
+###
+
+# Custom source
+cran <- getOption("repos")
+cran["dmlc"] <- "https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/R/CRAN/"
+options(repos = cran)
+install.packages("mxnet")
+library(mxnet)
+
+
+# Format required by MXNet
+train.matrix = data.matrix(train)
+train.matrix.y = train.matrix[,1]
+train.matrix.x = train.matrix[,-1]
+train.matrix.x = train.matrix.x / 255
+
+test.matrix = data.matrix(test)
+test.matrix.y = test.matrix[,1]
+test.matrix.x = test.matrix[,-1]
+test.matrix.x = test.matrix.x / 255
+
+
+# NN with 4 hidden layers
+dat = mx.symbol.Variable("data")
+fc1 = mx.symbol.FullyConnected(data, name = "fc1", num_hidden = 256)
+ac1 = mx.symbol.Activation(fc1, name = "relu1", act_type = "relu")
+fc2 = mx.symbol.FullyConnected(ac1, name = "fc2", num_hidden = 128)
+ac2 = mx.symbol.Activation(fc2, name = "relu2", act_type = "relu")
+fc3 = mx.symbol.FullyConnected(ac2, name = "fc3", num_hidden = 64)
+ac3 = mx.symbol.Activation(fc3, name = "relu3", act_type = "relu")
+fc4 = mx.symbol.FullyConnected(ac3, name = "fc4", num_hidden = 10)
+smx = mx.symbol.SoftmaxOutput(fc4, name = "smx")
+
+# Train
+mx.set.seed(0)
+model = mx.model.FeedForward.create(softmax,
+                                    X = train.matrix.x,
+                                    y = train.matrix.y,
+                                    ctx = mx.cpu(),
+                                    num.round = 20,
+                                    array.batch.size = 100,
+                                    learning.rate = 0.07,
+                                    momentum = 0.9,
+                                    eval.metric = mx.metric.accuracy,
+                                    initializer = mx.init.uniform(0.07),
+                                    epoch.end.callback = mx.callback.log.train.metric(100),
+                                    array.layout = "rowmajor"
+                                   )
+
+# get predictions
+preds = predict(model, test.matrix.x, array.layout = "rowmajor")
+pred.label = max.col(t(preds))
+table(pred.label, test.matrix.y)
