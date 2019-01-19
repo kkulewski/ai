@@ -116,3 +116,65 @@ acc.gbt10i40
 ###
 ### 3. KNN clustering
 ###
+
+install.packages("FNN")
+library(FNN)
+
+model.knn1 = knn(train.data, test.data, train.labels, k = 1)
+model.knn3 = knn(train.data, test.data, train.labels, k = 3)
+model.knn5 = knn(train.data, test.data, train.labels, k = 5)
+model.knn7 = knn(train.data, test.data, train.labels, k = 7)
+model.knn9 = knn(train.data, test.data, train.labels, k = 9)
+model.knn2 = knn(train.data, test.data, train.labels, k = 2)
+model.knn4 = knn(train.data, test.data, train.labels, k = 4)
+
+pred.model.knn1 = model.knn1
+pred.model.knn3 = model.knn3
+pred.model.knn5 = model.knn5
+pred.model.knn7 = model.knn7
+pred.model.knn9 = model.knn9
+pred.model.knn2 = model.knn2
+pred.model.knn4 = model.knn4
+
+cm.knn1 = table(pred.model.knn1, test.labels)
+cm.knn3 = table(pred.model.knn3, test.labels)
+cm.knn5 = table(pred.model.knn5, test.labels)
+cm.knn7 = table(pred.model.knn7, test.labels)
+cm.knn9 = table(pred.model.knn9, test.labels)
+cm.knn2 = table(pred.model.knn2, test.labels)
+cm.knn4 = table(pred.model.knn4, test.labels)
+
+acc.knn1 = sum(diag(cm.knn1))/sum(cm.knn1)
+acc.knn3 = sum(diag(cm.knn3))/sum(cm.knn3)
+acc.knn5 = sum(diag(cm.knn5))/sum(cm.knn5)
+acc.knn7 = sum(diag(cm.knn7))/sum(cm.knn7)
+acc.knn9 = sum(diag(cm.knn9))/sum(cm.knn9)
+acc.knn2 = sum(diag(cm.knn2))/sum(cm.knn2)
+acc.knn4 = sum(diag(cm.knn4))/sum(cm.knn4)
+
+cm.knn1
+acc.knn1
+
+cm.knn3
+acc.knn3
+
+cm.knn5
+acc.knn5
+
+cm.knn7
+acc.knn7
+
+cm.knn9
+acc.knn9
+
+cm.knn2
+acc.knn2
+
+cm.knn4
+acc.knn4
+
+
+
+###
+### 4. Ridge regression
+###
