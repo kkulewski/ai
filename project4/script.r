@@ -178,3 +178,38 @@ acc.knn4
 ###
 ### 4. Ridge regression
 ###
+
+install.packages("glmnet")
+library(glmnet)
+
+model.rrf03 = cv.glmnet(train.data[1:1000,], train.labels[1:1000], lambda = NULL, nfolds = 3, family = "multinomial")
+model.rrf10 = cv.glmnet(train.data[1:1000,], train.labels[1:1000], lambda = NULL, nfolds = 10, family = "multinomial")
+model.rrf30 = cv.glmnet(train.data[1:1000,], train.labels[1:1000], lambda = NULL, nfolds = 30, family = "multinomial")
+model.rr = cv.glmnet(train.data[1:10000,], train.labels[1:10000], lambda = NULL, nfolds = 3, family = "multinomial")
+
+pred.model.rrf03 = apply(predict(model.rrf03, test.data, s = model.rrf03$lambda.min, type="response"), 1, which.max) - 1L
+pred.model.rrf10 = apply(predict(model.rrf10, test.data, s = model.rrf10$lambda.min, type="response"), 1, which.max) - 1L
+pred.model.rrf30 = apply(predict(model.rrf30, test.data, s = model.rrf30$lambda.min, type="response"), 1, which.max) - 1L
+pred.model.rr = apply(predict(model.rr, test.data, s = model.rr$lambda.min, type="response"), 1, which.max) - 1L
+
+cm.rrf03 = table(pred.model.rrf03, test.labels)
+cm.rrf10 = table(pred.model.rrf10, test.labels)
+cm.rrf30 = table(pred.model.rrf30, test.labels)
+cm.rr = table(pred.model.rr, test.labels)
+
+acc.rrf03 = sum(diag(cm.rrf03))/sum(cm.rrf03)
+acc.rrf10 = sum(diag(cm.rrf10))/sum(cm.rrf10)
+acc.rrf30 = sum(diag(cm.rrf30))/sum(cm.rrf30)
+acc.rr = sum(diag(cm.rr))/sum(cm.rr)
+
+cm.rrf03
+acc.rrf03
+
+cm.rrf10
+acc.rrf10
+
+cm.rrf30
+acc.rrf30
+
+cm.rr
+acc.rr
