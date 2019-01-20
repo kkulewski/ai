@@ -315,7 +315,7 @@ acc.nn1r10 = sum(diag(cm.nn1r10))/sum(cm.nn1r10)
 ##
 
 dat = mx.symbol.Variable("data")
-fc1 = mx.symbol.FullyConnected(data, name = "fc1", num_hidden = 256)
+fc1 = mx.symbol.FullyConnected(dat, name = "fc1", num_hidden = 256)
 ac1 = mx.symbol.Activation(fc1, name = "relu1", act_type = "relu")
 fc2 = mx.symbol.FullyConnected(ac1, name = "fc2", num_hidden = 128)
 ac2 = mx.symbol.Activation(fc2, name = "relu2", act_type = "relu")
