@@ -281,8 +281,39 @@ test.matrix.y = test.matrix[,1]
 test.matrix.x = test.matrix[,-1]
 test.matrix.x = test.matrix.x / 255
 
+##
+## 6.1 NN with 1 hidden layer and 10 rounds
+##
 
-# NN with 4 hidden layers
+dat = mx.symbol.Variable("data")
+fc1 = mx.symbol.FullyConnected(data, name = "fc1", num_hidden = 10)
+smx = mx.symbol.SoftmaxOutput(fc1, name = "smx")
+
+mx.set.seed(0)
+model.nn1r10 = mx.model.FeedForward.create(
+  smx,
+  X = train.matrix.x,
+  y = train.matrix.y,
+  ctx = mx.cpu(),
+  num.round = 10,
+  array.batch.size = 100,
+  learning.rate = 0.07,
+  momentum = 0.9,
+  eval.metric = mx.metric.accuracy,
+  initializer = mx.init.uniform(0.07),
+  epoch.end.callback = mx.callback.log.train.metric(100),
+  array.layout = "rowmajor")
+
+pred.model.nn1r10 = predict(model.nn1r10, test.matrix.x, array.layout = "rowmajor")
+pred.model.nn1r10.label = max.col(t(pred.model.nn1r10))
+cm.nn1r10 = table(pred.model.nn1r10.label, test.matrix.y)
+acc.nn1r10 = sum(diag(cm.nn1r10))/sum(cm.nn1r10)
+
+
+##
+## 6.2 NN with 4 hidden layers and 10 rounds
+##
+
 dat = mx.symbol.Variable("data")
 fc1 = mx.symbol.FullyConnected(data, name = "fc1", num_hidden = 256)
 ac1 = mx.symbol.Activation(fc1, name = "relu1", act_type = "relu")
@@ -293,23 +324,89 @@ ac3 = mx.symbol.Activation(fc3, name = "relu3", act_type = "relu")
 fc4 = mx.symbol.FullyConnected(ac3, name = "fc4", num_hidden = 10)
 smx = mx.symbol.SoftmaxOutput(fc4, name = "smx")
 
-# Train
 mx.set.seed(0)
-model = mx.model.FeedForward.create(softmax,
-                                    X = train.matrix.x,
-                                    y = train.matrix.y,
-                                    ctx = mx.cpu(),
-                                    num.round = 20,
-                                    array.batch.size = 100,
-                                    learning.rate = 0.07,
-                                    momentum = 0.9,
-                                    eval.metric = mx.metric.accuracy,
-                                    initializer = mx.init.uniform(0.07),
-                                    epoch.end.callback = mx.callback.log.train.metric(100),
-                                    array.layout = "rowmajor"
-                                   )
+model.nn4r10 = mx.model.FeedForward.create(
+  smx,
+  X = train.matrix.x,
+  y = train.matrix.y,
+  ctx = mx.cpu(),
+  num.round = 10,
+  array.batch.size = 100,
+  learning.rate = 0.07,
+  momentum = 0.9,
+  eval.metric = mx.metric.accuracy,
+  initializer = mx.init.uniform(0.07),
+  epoch.end.callback = mx.callback.log.train.metric(100),
+  array.layout = "rowmajor")
 
-# get predictions
-preds = predict(model, test.matrix.x, array.layout = "rowmajor")
-pred.label = max.col(t(preds))
-table(pred.label, test.matrix.y)
+pred.model.nn4r10 = predict(model.nn4r10, test.matrix.x, array.layout = "rowmajor")
+pred.model.nn4r10.label = max.col(t(pred.model.nn4r10))
+cm.nn4r10 = table(pred.model.nn4r10.label, test.matrix.y)
+acc.nn4r10 = sum(diag(cm.nn4r10))/sum(cm.nn4r10)
+
+
+##
+## 6.3 NN with 4 hidden layers and 25 rounds
+##
+
+mx.set.seed(0)
+model.nn4r25 = mx.model.FeedForward.create(
+  smx,
+  X = train.matrix.x,
+  y = train.matrix.y,
+  ctx = mx.cpu(),
+  num.round = 25,
+  array.batch.size = 100,
+  learning.rate = 0.07,
+  momentum = 0.9,
+  eval.metric = mx.metric.accuracy,
+  initializer = mx.init.uniform(0.07),
+  epoch.end.callback = mx.callback.log.train.metric(100),
+  array.layout = "rowmajor")
+
+pred.model.nn4r25 = predict(model.nn4r25, test.matrix.x, array.layout = "rowmajor")
+pred.model.nn4r25.label = max.col(t(pred.model.nn4r25))
+cm.nn4r25 = table(pred.model.nn4r25.label, test.matrix.y)
+acc.nn4r25 = sum(diag(cm.nn4r25))/sum(cm.nn4r25)
+
+
+##
+## 6.4 NN with 4 hidden layers and 50 rounds
+##
+
+mx.set.seed(0)
+model.nn4r50 = mx.model.FeedForward.create(
+  smx,
+  X = train.matrix.x,
+  y = train.matrix.y,
+  ctx = mx.cpu(),
+  num.round = 50,
+  array.batch.size = 100,
+  learning.rate = 0.07,
+  momentum = 0.9,
+  eval.metric = mx.metric.accuracy,
+  initializer = mx.init.uniform(0.07),
+  epoch.end.callback = mx.callback.log.train.metric(100),
+  array.layout = "rowmajor")
+
+pred.model.nn4r50 = predict(model.nn4r50, test.matrix.x, array.layout = "rowmajor")
+pred.model.nn4r50.label = max.col(t(pred.model.nn4r50))
+cm.nn4r50 = table(pred.model.nn4r50.label, test.matrix.y)
+acc.nn4r50 = sum(diag(cm.nn4r50))/sum(cm.nn4r50)
+
+
+##
+## Summary
+##
+
+cm.nn1r10
+acc.nn1r10
+
+cm.nn4r10
+acc.nn4r10
+
+cm.nn4r25
+acc.nn4r25
+
+cm.nn4r50
+acc.nn4r50
