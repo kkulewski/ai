@@ -21,7 +21,7 @@
 
 
 ### 1. Wczytujemy baze + westepne ogledziny
-db <- read.csv('diabetes.csv', header=TRUE, sep=',')
+db <- read.csv('../data/diabetes.csv', header=TRUE, sep=',')
 #db
 #summary(db)
 

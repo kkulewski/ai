@@ -21,11 +21,11 @@ CnfFitness(cnf2, chr2)
 
 # using CNF file
 chr3 = c(1, 0, 1)
-cnf3 = CnfParse("../cnf/1.cnf")
+cnf3 = CnfParse("../data/1.cnf")
 CnfFitness(cnf3, chr3)
 
 chr4 = rep(1, 100)
-cnf4 = CnfParse("../cnf/CBS_k3_n100_m403_b10_0.cnf")
+cnf4 = CnfParse("../data/CBS_k3_n100_m403_b10_0.cnf")
 CnfFitness(cnf4, chr4)
 
 
@@ -148,15 +148,15 @@ meanEliOn = mean(scorEli[, 2])
 
 ## instance size : time
 
-cnf050 = CnfParse("../cnf/prog/uf50-01.cnf")
-cnf075 = CnfParse("../cnf/prog/uf75-01.cnf")
-cnf100 = CnfParse("../cnf/prog/uf100-01.cnf")
-cnf125 = CnfParse("../cnf/prog/uf125-01.cnf")
-cnf150 = CnfParse("../cnf/prog/uf150-01.cnf")
-cnf175 = CnfParse("../cnf/prog/uf175-01.cnf")
-cnf200 = CnfParse("../cnf/prog/uf200-01.cnf")
-cnf225 = CnfParse("../cnf/prog/uf225-01.cnf")
-cnf250 = CnfParse("../cnf/prog/uf250-01.cnf")
+cnf050 = CnfParse("../data/prog/uf50-01.cnf")
+cnf075 = CnfParse("../data/prog/uf75-01.cnf")
+cnf100 = CnfParse("../data/prog/uf100-01.cnf")
+cnf125 = CnfParse("../data/prog/uf125-01.cnf")
+cnf150 = CnfParse("../data/prog/uf150-01.cnf")
+cnf175 = CnfParse("../data/prog/uf175-01.cnf")
+cnf200 = CnfParse("../data/prog/uf200-01.cnf")
+cnf225 = CnfParse("../data/prog/uf225-01.cnf")
+cnf250 = CnfParse("../data/prog/uf250-01.cnf")
 
 ga050 = function(chromosome) { return (CnfFitness(cnf050, chromosome)) }
 ga075 = function(chromosome) { return (CnfFitness(cnf075, chromosome)) }

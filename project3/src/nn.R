@@ -14,7 +14,7 @@ library(neuralnet)
 # Load #
 ########
 
-setwd("C:/Users/Krzysztof/Documents/ai/project3/data")
+setwd("../data")
 
 # load files into data frames list
 data.raw = list()

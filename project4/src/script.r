@@ -5,8 +5,8 @@
 install.packages("readr")
 library(readr)
 
-train = read_csv("data/mnist_train.csv")
-test = read_csv("data/mnist_test.csv")
+train = read_csv("../data/mnist_train.csv")
+test = read_csv("../data/mnist_test.csv")
 
 # Create label vectors
 train.labels = train[, 1]
